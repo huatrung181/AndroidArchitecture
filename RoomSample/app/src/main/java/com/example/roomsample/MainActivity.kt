@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, View.OnClickListener {
         }
     }
 
-     fun findNote() = launch {
+     private fun findNote() = launch {
         val strFind= edittext_find.text.toString()
          if(!TextUtils.isEmpty(strFind)){
              val note: NoteEntity?= noteDB?.noteDao()?.findNoteByTitle(strFind)

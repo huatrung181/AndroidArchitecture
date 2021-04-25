@@ -1,0 +1,8 @@
+
+<resources>
+<string name="app_name">FilterPhoto</string>
+<string name="intro">Demo ứng dụng filter ảnh</string>
+<string name="website">Dương Vũ from https://cungdev.com</string>
+<string name="next">Tiếp tục</string>
+<string name="back">Quay lại</string>
+</resources>

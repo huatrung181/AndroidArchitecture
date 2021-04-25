@@ -43,16 +43,16 @@ class NoteListAdapter internal constructor(context: Context,
         holder.contentItemView.text= currentNote.content
         holder.deleteItemView.setOnClickListener{
             uiScope.launch {
-                noteDB?.noteDao()?.delete(currentNote)
-                notes=noteDB?.noteDao()?.getAllNotes()
+                noteDB.noteDao().delete(currentNote)
+                notes= noteDB.noteDao().getAllNotes()
                 notifyDataSetChanged()
             }
         }
 
     }
     inner class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleItemView = itemView.note_title
-        val contentItemView = itemView.note_content
-        val deleteItemView = itemView.button_delete
+        val titleItemView = itemView.note_title!!
+        val contentItemView = itemView.note_content!!
+        val deleteItemView = itemView.button_delete!!
     }
 }

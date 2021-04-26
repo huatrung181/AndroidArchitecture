@@ -37,13 +37,14 @@ class ListFilterAdapter(var listFilter: List<FilterData>) :
     inner class FilterViewHolder(itemView: View?) :
         RecyclerView.ViewHolder(itemView!!) {
         @BindView(R.id.ll_filter)
-        var llFilter: View? = null
+        lateinit var llFilter: View
 
         @BindView(R.id.iv_filter_image)
-        var ivFilterImage: ImageView? = null
+        lateinit var ivFilterImage: ImageView
 
         @BindView(R.id.tv_filter_name)
-        var tvFilterName: TextView? = null
+        lateinit  var tvFilterName: TextView
+
         fun setData(filterData: FilterData?, position: Int) {
             //  ivFilterImage.setImageResource(filterData.getImageId());
             // tvFilterName.setText(filterData.getName());

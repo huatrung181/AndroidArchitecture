@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.OnClick
+import com.example.filterphoto.kotlin.CameraResultActivity
 import com.example.filterphoto.kotlin.FilterData
 import com.example.filterphoto.kotlin.ListFilterAdapter
 import com.example.filterphoto.kotlin.base.BaseActivity
@@ -168,6 +169,17 @@ class MainActivity : BaseActivity() {
 
     override fun getLayoutId(): Int {
         return R.layout.activity_main
+    }
+    @OnClick(R.id.bt_close)
+    fun closeCamera(){
+        finish()
+    }
+
+    @OnClick(R.id.iv_pick_image)
+    fun pickImage(){
+        var bundle = Bundle()
+        showActivityWithBundle(CameraResultActivity::class.java, bundle)
+
     }
 
     @OnClick(R.id.bt_take_picture)

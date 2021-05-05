@@ -28,7 +28,7 @@ class ListFilterAdapter(var listFilter: List<FilterData>): RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: ListFilterAdapter.FilterViewHolder, position: Int) {
-        holder.setData(listFilter.get(position),position)
+        holder.setData(listFilter[position],position)
     }
 
    inner class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

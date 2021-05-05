@@ -4,8 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.telephony.SmsManager
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.animation.GlideAnimation
@@ -23,6 +27,11 @@ import com.example.filterphoto.kotlin.base.BaseActivity
 import com.example.filterphoto.kotlin.utils.Constant
 import com.example.filterphoto.kotlin.utils.DeviceUtils
 import com.isseiaoki.simplecropview.CropImageView
+import com.isseiaoki.simplecropview.callback.CropCallback
+import com.isseiaoki.simplecropview.callback.SaveCallback
+import org.wysaid.myUtils.ImageUtil
+import org.wysaid.nativePort.CGEFFmpegNativeLibrary
+import org.wysaid.nativePort.CGENativeLibrary
 import java.io.File
 
 class CameraResultActivity : BaseActivity() {
@@ -36,7 +45,7 @@ class CameraResultActivity : BaseActivity() {
     @BindView(R.id.rv_filter)
     lateinit var rvFilter: RecyclerView
     @BindView(R.id.iv_crop)
-    lateinit var ivCrop: CropImageView
+   public lateinit var ivCrop: CropImageView
 
     @BindView(R.id.rl_image)
     lateinit var rlImage: RelativeLayout
@@ -71,7 +80,7 @@ class CameraResultActivity : BaseActivity() {
         rlImage.layoutParams.height = screenWidth
         ivCrop.layoutParams.height= screenWidth
 
-        if (imagePath!=null && !imagePath.isEmpty()){
+        if (!imagePath.isEmpty()){
             Glide.with(this).load(File(imagePath)).asBitmap().format(DecodeFormat.PREFER_ARGB_8888).into(object : SimpleTarget<Bitmap?>(){
                 override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap?>?) {
                     this@CameraResultActivity.resource= resource!!
@@ -168,27 +177,95 @@ class CameraResultActivity : BaseActivity() {
         }
         var filterAdapter= ListFilterAdapter(listFilter)
         rvFilter.adapter=filterAdapter
+        filterAdapter.onFilterSelect= object : ListFilterAdapter.OnFilterSelect{
+            override fun onSelect(filterData: FilterData?) {
+                FilterBitmapTask().execute(filterData?.rule)
+            }
+
+        }
+
+    }
+
+   inner class FilterBitmapTask : AsyncTask<String, Void, Bitmap>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            showProgressDialog("filtering...")
+        }
 
 
 
+       override fun onPostExecute(result: Bitmap?) {
+           super.onPostExecute(result)
+           ivCrop.imageBitmap=result
+           var logData="FilterBitmapTask "+" bitmap null:"+(result==null)
 
+           if (result!=null){
+               logData= logData+"bitmap width="+result.width + " - bitmap height="+ result.height
+
+           }
+           hideProgressDialog()
+       }
+
+        override fun doInBackground(vararg params: String?): Bitmap {
+            finalResource = CGENativeLibrary.cgeFilterImage_MultipleEffects(resource, params[0],1f)
+            return finalResource
+        }
+
+    }
+    private fun showProgressDialog(s: String) {
+        TODO("Not yet implemented")
+    }
+    private fun hideProgressDialog() {
+
+
+    }
+
+    @OnClick(R.id.bt_continue, R.id.bt_done)
+    fun cropImage(){
+        ivCrop.startCrop(null, object : CropCallback{
+            override fun onSuccess(cropped: Bitmap?) {
+                var file = File(Environment.getExternalStorageDirectory().toString() + "/FeedyPhoto/Filtered")
+                if (!file.exists()){
+                    file.mkdir()
+                }
+                var imagePath= ImageUtil.saveBitmap(cropped, file.absolutePath+"/"+System.currentTimeMillis()+".jpg")
+                var bundle = Bundle()
+                if (imagePath!=null){
+                    bundle.putString(Constant.KEY_IMAGE_PATH,  imagePath)
+                    showActivityWithBundle(FinalImageActivity::class.java, bundle)
+                }
+
+            }
+
+            override fun onError(e: Throwable?) {
+                TODO("Not yet implemented")
+            }
+        }, object : SaveCallback{
+            override fun onSuccess(uri: Uri?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onError(e: Throwable?) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
 
     override fun createView() {
-        TODO("Not yet implemented")
+        setUpListFilterEffect();
     }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_camera_result
-        TODO("Not yet implemented")
+
     }
 
     fun getData(){
         var bundle = intent.getBundleExtra(Constant.KEY_EXTRA)
         if(bundle!=null){
             imagePath = bundle.getString(Constant.KEY_IMAGE_PATH)!!
-            targetScreen = bundle.getString(Constant.KEY_TARGET_SCREEN)!!
+            targetScreen = bundle.getString(Constant.KEY_TARGET_SCREEN,"")!!
         }
     }
 

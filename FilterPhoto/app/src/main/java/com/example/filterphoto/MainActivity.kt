@@ -136,35 +136,34 @@ class MainActivity : BaseActivity() {
                 , R.drawable.cool_2, R.drawable.mood, R.drawable.bw)
         for (i in EFFECT_CONFIGS.indices) {
             when(i){
-                1-> listFilter.add(FilterData("Original", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                2-> listFilter.add(FilterData("Natural 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                3-> listFilter.add(FilterData("Natural 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                4-> listFilter.add(FilterData("Pure 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                5-> listFilter.add(FilterData("Pure 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                6-> listFilter.add(FilterData("Pinky 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                7-> listFilter.add(FilterData("Pinky 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                8-> listFilter.add(FilterData("Pinky 3", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                9-> listFilter.add(FilterData("Pinky 4", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                10-> listFilter.add(FilterData("Warm 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                11-> listFilter.add(FilterData("Warm 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                12-> listFilter.add(FilterData("Cool 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                13-> listFilter.add(FilterData("Cool 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                14-> listFilter.add(FilterData("Mood", EFFECT_CONFIGS.get(i), imageFilterId[i]))
-                15-> listFilter.add(FilterData("B&W", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                0-> listFilter.add(FilterData("Original", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                1-> listFilter.add(FilterData("Natural 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                2-> listFilter.add(FilterData("Natural 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                3-> listFilter.add(FilterData("Pure 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                4-> listFilter.add(FilterData("Pure 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                5-> listFilter.add(FilterData("Pinky 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                6-> listFilter.add(FilterData("Pinky 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                7-> listFilter.add(FilterData("Pinky 3", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                8-> listFilter.add(FilterData("Pinky 4", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                9-> listFilter.add(FilterData("Warm 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                10-> listFilter.add(FilterData("Warm 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                11-> listFilter.add(FilterData("Cool 1", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                12-> listFilter.add(FilterData("Cool 2", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                13-> listFilter.add(FilterData("Mood", EFFECT_CONFIGS.get(i), imageFilterId[i]))
+                14-> listFilter.add(FilterData("B&W", EFFECT_CONFIGS.get(i), imageFilterId[i]))
             }
-
-            var filterAdapter = ListFilterAdapter(listFilter)
-
-
-            filterAdapter.onFilterSelect= object :ListFilterAdapter.OnFilterSelect{
-                override fun onSelect(filterData: FilterData?) {
-                    selectedFilterData = filterData!!
-                    cameraView.setFilterWithConfig(filterData.rule)
-                }
-            }
-
-            rvFilter.adapter= filterAdapter
         }
+        var filterAdapter = ListFilterAdapter(listFilter)
+
+
+        filterAdapter.onFilterSelect= object :ListFilterAdapter.OnFilterSelect{
+            override fun onSelect(filterData: FilterData?) {
+                selectedFilterData = filterData!!
+                cameraView.setFilterWithConfig(filterData.rule)
+            }
+        }
+
+        rvFilter.adapter= filterAdapter
     }
 
     override fun getLayoutId(): Int {
